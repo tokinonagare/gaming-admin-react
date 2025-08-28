@@ -26,13 +26,17 @@ const main = async () => {
   
   if (!appName) {
     console.error('Usage: node serve.js <app-name>');
-    console.log('Available apps: shell, gaming-admin');
+    console.log('Available apps: shell, user-report, user-transaction, user-profile, app-user, user-avatar');
     process.exit(1);
   }
   
   const ports = {
     'shell': 4200,
-    'gaming-admin': 4201
+    'user-report': 4201,
+    'user-transaction': 4202,
+    'user-profile': 4203,
+    'app-user': 4204,
+    'user-avatar': 4205
   };
   
   const port = ports[appName];

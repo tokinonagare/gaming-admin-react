@@ -5,21 +5,33 @@ import { Spin } from 'antd';
 import ErrorBoundary from './components/ErrorBoundary';
 
 // 动态导入远程模块
-const Dashboard = React.lazy(() => 
-  import('gaming-admin/Dashboard').catch(() => 
-    import('./fallbacks/DashboardFallback')
+const UserReport = React.lazy(() => 
+  import('user-report/UserReport').catch(() => 
+    import('./fallbacks/UserReportFallback')
   )
 );
 
-const GameManagement = React.lazy(() => 
-  import('game-management/GameList').catch(() => 
-    import('./fallbacks/GameManagementFallback')
+const UserTransaction = React.lazy(() => 
+  import('user-transaction/UserTransaction').catch(() => 
+    import('./fallbacks/UserTransactionFallback')
   )
 );
 
-const UserManagement = React.lazy(() => 
-  import('user-management/UserList').catch(() => 
-    import('./fallbacks/UserManagementFallback')
+const UserProfile = React.lazy(() => 
+  import('user-profile/UserProfile').catch(() => 
+    import('./fallbacks/UserProfileFallback')
+  )
+);
+
+const AppUser = React.lazy(() => 
+  import('app-user/AppUser').catch(() => 
+    import('./fallbacks/AppUserFallback')
+  )
+);
+
+const UserAvatar = React.lazy(() => 
+  import('user-avatar/UserAvatar').catch(() => 
+    import('./fallbacks/UserAvatarFallback')
   )
 );
 
@@ -29,9 +41,12 @@ const App: React.FC = () => {
       <Layout>
         <Suspense fallback={<Spin size=\"large\" style={{ display: 'flex', justifyContent: 'center', marginTop: '20%' }} />}>
           <Routes>
-            <Route path=\"/\" element={<Dashboard />} />
-            <Route path=\"/games\" element={<GameManagement />} />
-            <Route path=\"/users\" element={<UserManagement />} />
+            <Route path=\"/\" element={<UserReport />} />
+            <Route path=\"/user-report\" element={<UserReport />} />
+            <Route path=\"/user-transaction\" element={<UserTransaction />} />
+            <Route path=\"/user-profile\" element={<UserProfile />} />
+            <Route path=\"/app-user\" element={<AppUser />} />
+            <Route path=\"/user-avatar\" element={<UserAvatar />} />
           </Routes>
         </Suspense>
       </Layout>

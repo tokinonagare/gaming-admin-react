@@ -45,12 +45,13 @@ module.exports = {
   
   plugins: [
     new ModuleFederationPlugin({
-      name: 'gaming_admin',
+      name: 'user_avatar',
       filename: 'remoteEntry.js',
       exposes: {
-        './Dashboard': './src/pages/Dashboard',
-        './GameList': './src/components/GameList',
-        './Analytics': './src/components/Analytics',
+        './UserAvatar': './src/pages/UserAvatar',
+        './AvatarList': './src/components/AvatarList',
+        './AvatarUpload': './src/components/AvatarUpload',
+        './AvatarManagement': './src/components/AvatarManagement',
       },
       shared: {
         react: {
@@ -79,7 +80,7 @@ module.exports = {
   ],
   
   devServer: {
-    port: 4201,
+    port: 4205,
     historyApiFallback: true,
     hot: true,
     headers: {
@@ -92,10 +93,10 @@ module.exports = {
   },
   
   output: {
-    path: path.resolve(__dirname, '../../dist/apps/gaming-admin'),
+    path: path.resolve(__dirname, '../../dist/apps/user-avatar'),
     filename: isDevelopment ? '[name].js' : '[name].[contenthash].js',
     chunkFilename: isDevelopment ? '[name].chunk.js' : '[name].[contenthash].chunk.js',
     clean: true,
-    publicPath: isDevelopment ? 'http://localhost:4201/' : '/gaming-admin/',
+    publicPath: isDevelopment ? 'http://localhost:4205/' : '/user-avatar/',
   },
 };

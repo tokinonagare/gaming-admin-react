@@ -33,14 +33,14 @@ const main = async () => {
     console.log('🚀 Starting build process...');
     
     // Build apps in parallel or sequential based on preference
+    const apps = ['shell', 'user-report', 'user-transaction', 'user-profile', 'app-user', 'user-avatar'];
+    
     if (process.argv.includes('--parallel')) {
-      await Promise.all([
-        buildApp('shell'),
-        buildApp('gaming-admin')
-      ]);
+      await Promise.all(apps.map(app => buildApp(app)));
     } else {
-      await buildApp('shell');
-      await buildApp('gaming-admin');
+      for (const app of apps) {
+        await buildApp(app);
+      }
     }
     
     console.log('🎉 All builds completed successfully!');

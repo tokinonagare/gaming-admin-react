@@ -16,24 +16,29 @@ const Sidebar: React.FC = () => {
 
   const menuItems = [
     {
-      key: '/',
+      key: '/user-report',
       icon: <DashboardOutlined />,
-      label: '仪表盘',
+      label: '用户报告',
     },
     {
-      key: '/games',
+      key: '/user-transaction',
       icon: <GamepadOutlined />,
-      label: '游戏管理',
+      label: '用户交易',
     },
     {
-      key: '/users',
+      key: '/user-profile',
       icon: <UserOutlined />,
-      label: '用户管理',
+      label: '用户档案',
     },
     {
-      key: '/settings',
+      key: '/user-avatar',
+      icon: <UserOutlined />,
+      label: '用户头像',
+    },
+    {
+      key: '/app-user',
       icon: <SettingOutlined />,
-      label: '系统设置',
+      label: '应用用户',
     },
   ];
 

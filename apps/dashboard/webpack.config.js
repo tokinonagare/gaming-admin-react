@@ -45,24 +45,11 @@ module.exports = {
   
   plugins: [
     new ModuleFederationPlugin({
-      name: 'shell',
+      name: 'dashboard',
       filename: 'remoteEntry.js',
-      remotes: {
-        'user-report': isDevelopment 
-          ? 'user_report@http://localhost:4201/remoteEntry.js'
-          : 'user_report@/user-report/remoteEntry.js',
-        'user-transaction': isDevelopment 
-          ? 'user_transaction@http://localhost:4202/remoteEntry.js'
-          : 'user_transaction@/user-transaction/remoteEntry.js',
-        'user-profile': isDevelopment 
-          ? 'user_profile@http://localhost:4203/remoteEntry.js'
-          : 'user_profile@/user-profile/remoteEntry.js',
-        'app-user': isDevelopment 
-          ? 'app_user@http://localhost:4204/remoteEntry.js'
-          : 'app_user@/app-user/remoteEntry.js',
-        'user-avatar': isDevelopment 
-          ? 'user_avatar@http://localhost:4205/remoteEntry.js'
-          : 'user_avatar@/user-avatar/remoteEntry.js',
+      exposes: {
+        './Dashboard': './src/pages/Dashboard',
+        './Analytics': './src/components/Analytics',
       },
       shared: {
         react: {
@@ -91,7 +78,7 @@ module.exports = {
   ],
   
   devServer: {
-    port: 4200,
+    port: 4201,
     historyApiFallback: true,
     hot: true,
     headers: {
@@ -104,10 +91,10 @@ module.exports = {
   },
   
   output: {
-    path: path.resolve(__dirname, '../../dist/apps/shell'),
+    path: path.resolve(__dirname, '../../dist/apps/dashboard'),
     filename: isDevelopment ? '[name].js' : '[name].[contenthash].js',
     chunkFilename: isDevelopment ? '[name].chunk.js' : '[name].[contenthash].chunk.js',
     clean: true,
-    publicPath: isDevelopment ? 'http://localhost:4200/' : '/',
+    publicPath: isDevelopment ? 'http://localhost:4201/' : '/dashboard/',
   },
 };
