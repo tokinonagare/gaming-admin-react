@@ -1,11 +1,8 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "es6"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -19,17 +16,18 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "declaration": false,
+    "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@shared/ui": ["libs/shared/ui/src/index.ts"],
+      "@shared/utils": ["libs/shared/utils/src/index.ts"],
+      "@shared/types": ["libs/shared/types/src/index.ts"]
     }
   },
   "include": [
-    "src/**/*",
-    "types/**/*"
+    "apps/**/*",
+    "libs/**/*"
   ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]
 }

@@ -12,6 +12,9 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      '@shared/ui': path.resolve(__dirname, '../../libs/shared/ui/src/index.ts'),
+      '@shared/utils': path.resolve(__dirname, '../../libs/shared/utils/src/index.ts'),
+      '@shared/types': path.resolve(__dirname, '../../libs/shared/types/src/index.ts'),
     },
   },
   
@@ -19,7 +22,14 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              configFile: path.resolve(__dirname, '../../tsconfig.json'),
+            },
+          },
+        ],
         exclude: /node_modules/,
       },
       {

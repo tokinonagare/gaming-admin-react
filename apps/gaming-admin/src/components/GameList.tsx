@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Button, Space, Tag } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
-const GameManagement: React.FC = () => {
+const GameList: React.FC = () => {
   const columns = [
     {
       title: '游戏名称',
@@ -57,7 +57,7 @@ const GameManagement: React.FC = () => {
 
   return (
     <div style={{ padding: '24px' }}>
-      <h1>游戏管理</h1>
+      <h1>游戏列表</h1>
       <Button type="primary" style={{ marginBottom: 16 }}>
         添加游戏
       </Button>
@@ -66,4 +66,4 @@ const GameManagement: React.FC = () => {
   );
 };
 
-export default GameManagement;
+export default GameList;
