@@ -33,3 +33,11 @@ Thumbs.db
 
 # TypeScript
 *.tsbuildinfo
+
+# Micro-frontend apps (managed separately)
+apps/user-report/src/
+apps/user-transaction/src/
+apps/user-profile/src/
+apps/app-user/src/
+apps/user-avatar/src/
+apps/*/node_modules/
