@@ -3,12 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "webpack serve --mode development",
-    "build": "webpack --mode production",
-    "serve": "webpack serve --mode development",
-    "clean": "rm -rf dist",
-    "lint": "eslint src --ext .ts,.tsx",
-    "typecheck": "tsc --noEmit"
+    "start": "nx serve shell",
+    "build": "nx build shell",
+    "build:all": "nx run-many --target=build --all",
+    "serve:shell": "nx serve shell",
+    "serve:admin": "nx serve gaming-admin",
+    "clean": "nx reset",
+    "lint": "nx run-many --target=lint --all",
+    "typecheck": "nx run-many --target=typecheck --all",
+    "test": "nx run-many --target=test --all",
+    "affected:build": "nx affected --target=build",
+    "affected:test": "nx affected --target=test",
+    "affected:lint": "nx affected --target=lint"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -23,8 +29,14 @@
     "@types/react-dom": "^18.0.11",
     "@types/node": "^18.15.11",
     "typescript": "^5.0.2",
+    "nx": "^19.5.0",
+    "@nx/workspace": "^19.5.0",
+    "@nx/react": "^19.5.0",
+    "@nx/webpack": "^19.5.0",
+    "@nx/rollup": "^19.5.0",
+    "@nx/eslint-plugin": "^19.5.0",
     "webpack": "^5.76.3",
-    "@module-federation/webpack": "^0.0.5",
+    "@module-federation/enhanced": "^0.2.5",
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.13.2",
     "html-webpack-plugin": "^5.5.0",
@@ -36,7 +48,8 @@
     "@typescript-eslint/parser": "^5.57.1",
     "eslint": "^8.37.0",
     "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0"
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "rollup": "^4.0.0"
   },
   "browserslist": {
     "production": [

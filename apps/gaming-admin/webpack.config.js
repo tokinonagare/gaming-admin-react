@@ -1,0 +1,91 @@
+const { ModuleFederationPlugin } = require('@module-federation/enhanced/webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+
+const isDevelopment = process.env.NODE_ENV !== 'production';
+
+module.exports = {
+  mode: isDevelopment ? 'development' : 'production',
+  entry: './src/main.tsx',
+  
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
+  
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
+    ],
+  },
+  
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'gaming_admin',
+      filename: 'remoteEntry.js',
+      exposes: {
+        './Dashboard': './src/pages/Dashboard',
+        './GameList': './src/components/GameList',
+        './Analytics': './src/components/Analytics',
+      },
+      shared: {
+        react: {
+          singleton: true,
+          requiredVersion: '^18.2.0',
+        },
+        'react-dom': {
+          singleton: true,
+          requiredVersion: '^18.2.0',
+        },
+        'react-router-dom': {
+          singleton: true,
+          requiredVersion: '^6.10.0',
+        },
+        antd: {
+          singleton: true,
+          requiredVersion: '^5.4.0',
+        },
+      },
+    }),
+    
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html',
+    }),
+  ],
+  
+  devServer: {
+    port: 4201,
+    historyApiFallback: true,
+    hot: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+  },
+  
+  optimization: {
+    splitChunks: false,
+  },
+  
+  output: {
+    path: path.resolve(__dirname, '../../dist/apps/gaming-admin'),
+    filename: isDevelopment ? '[name].js' : '[name].[contenthash].js',
+    chunkFilename: isDevelopment ? '[name].chunk.js' : '[name].[contenthash].chunk.js',
+    clean: true,
+    publicPath: isDevelopment ? 'http://localhost:4201/' : '/gaming-admin/',
+  },
+};

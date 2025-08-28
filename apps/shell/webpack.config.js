@@ -1,0 +1,97 @@
+const { ModuleFederationPlugin } = require('@module-federation/enhanced/webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+
+const isDevelopment = process.env.NODE_ENV !== 'production';
+
+module.exports = {
+  mode: isDevelopment ? 'development' : 'production',
+  entry: './src/main.tsx',
+  
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
+  
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
+    ],
+  },
+  
+  plugins: [
+    new ModuleFederationPlugin({
+      name: 'shell',
+      filename: 'remoteEntry.js',
+      remotes: {
+        'gaming-admin': isDevelopment 
+          ? 'gaming_admin@http://localhost:4201/remoteEntry.js'
+          : 'gaming_admin@/gaming-admin/remoteEntry.js',
+        'user-management': isDevelopment 
+          ? 'user_management@http://localhost:4202/remoteEntry.js'
+          : 'user_management@/user-management/remoteEntry.js',
+        'game-management': isDevelopment 
+          ? 'game_management@http://localhost:4203/remoteEntry.js'
+          : 'game_management@/game-management/remoteEntry.js',
+      },
+      shared: {
+        react: {
+          singleton: true,
+          requiredVersion: '^18.2.0',
+        },
+        'react-dom': {
+          singleton: true,
+          requiredVersion: '^18.2.0',
+        },
+        'react-router-dom': {
+          singleton: true,
+          requiredVersion: '^6.10.0',
+        },
+        antd: {
+          singleton: true,
+          requiredVersion: '^5.4.0',
+        },
+      },
+    }),
+    
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html',
+    }),
+  ],
+  
+  devServer: {
+    port: 4200,
+    historyApiFallback: true,
+    hot: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+  },
+  
+  optimization: {
+    splitChunks: false,
+  },
+  
+  output: {
+    path: path.resolve(__dirname, '../../dist/apps/shell'),
+    filename: isDevelopment ? '[name].js' : '[name].[contenthash].js',
+    chunkFilename: isDevelopment ? '[name].chunk.js' : '[name].[contenthash].chunk.js',
+    clean: true,
+    publicPath: isDevelopment ? 'http://localhost:4200/' : '/',
+  },
+};
