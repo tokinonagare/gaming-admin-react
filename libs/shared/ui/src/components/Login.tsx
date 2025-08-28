@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Card, Form, Input, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { useAuth } from '@shared/ui';
+import { useAuth } from '../contexts/AuthContext';
 
 const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);

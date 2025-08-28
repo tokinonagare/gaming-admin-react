@@ -1,9 +1,8 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { Layout, AuthRoute } from '@shared/ui';
+import { Layout, AuthRoute, Login } from '@shared/ui';
 import { Spin } from 'antd';
 import ErrorBoundary from './components/ErrorBoundary';
-import Login from '../pages/Login';
 
 // 动态导入远程模块
 const UserReport = React.lazy(() => 

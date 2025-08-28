@@ -6,6 +6,7 @@ export { default as AuthRoute } from './components/AuthRoute';
 export { default as UnauthorizedError } from './components/UnauthorizedError';
 export { default as DefaultAvatar } from './components/DefaultAvatar';
 export { default as UserAvatar } from './components/UserAvatar';
+export { default as Login } from './components/Login';
 export { AuthProvider, useAuth } from './contexts/AuthContext';
 export { QueryProvider, queryClient } from './providers/QueryProvider';
 export * from './types';
