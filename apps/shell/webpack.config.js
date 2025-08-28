@@ -1,5 +1,6 @@
 const { ModuleFederationPlugin } = require('@module-federation/enhanced/webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 const path = require('path');
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -27,6 +28,7 @@ module.exports = {
             loader: 'ts-loader',
             options: {
               configFile: path.resolve(__dirname, '../../tsconfig.json'),
+              transpileOnly: true,
             },
           },
         ],
@@ -60,25 +62,26 @@ module.exports = {
         'app-user': isDevelopment 
           ? 'app_user@http://localhost:4204/remoteEntry.js'
           : 'app_user@/app-user/remoteEntry.js',
-        'user-avatar': isDevelopment 
-          ? 'user_avatar@http://localhost:4205/remoteEntry.js'
-          : 'user_avatar@/user-avatar/remoteEntry.js',
       },
       shared: {
         react: {
           singleton: true,
+          eager: true,
           requiredVersion: '^18.2.0',
         },
         'react-dom': {
           singleton: true,
+          eager: true,
           requiredVersion: '^18.2.0',
         },
         'react-router-dom': {
           singleton: true,
+          eager: true,
           requiredVersion: '^6.10.0',
         },
         antd: {
           singleton: true,
+          eager: true,
           requiredVersion: '^5.4.0',
         },
       },
@@ -87,6 +90,14 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: 'index.html',
+    }),
+
+    new webpack.DefinePlugin({
+      'process.env.REACT_APP_NAME': JSON.stringify(process.env.REACT_APP_NAME || 'Gaming Admin'),
+      'process.env.REACT_APP_STAGE': JSON.stringify(process.env.REACT_APP_STAGE || 'development'),
+      'process.env.REACT_APP_API_DOMAIN': JSON.stringify(process.env.REACT_APP_API_DOMAIN || 'https://admin.laiwan.io/admin/'),
+      'process.env.REACT_APP_VERSION': JSON.stringify(process.env.REACT_APP_VERSION || '1.0.0'),
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
     }),
   ],
   

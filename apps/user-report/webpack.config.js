@@ -1,5 +1,6 @@
 const { ModuleFederationPlugin } = require('@module-federation/enhanced/webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 const path = require('path');
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -27,6 +28,7 @@ module.exports = {
             loader: 'ts-loader',
             options: {
               configFile: path.resolve(__dirname, '../../tsconfig.json'),
+              transpileOnly: true,
             },
           },
         ],
@@ -48,10 +50,7 @@ module.exports = {
       name: 'user_report',
       filename: 'remoteEntry.js',
       exposes: {
-        './UserReport': './src/pages/UserReport',
-        './ReportDashboard': './src/components/ReportDashboard',
-        './ReportList': './src/components/ReportList',
-        './ReportAnalytics': './src/components/ReportAnalytics',
+        './UserReport': './src/app/UserReport',
       },
       shared: {
         react: {
@@ -70,12 +69,24 @@ module.exports = {
           singleton: true,
           requiredVersion: '^5.4.0',
         },
+        moment: {
+          singleton: true,
+          requiredVersion: '^2.29.1',
+        },
       },
     }),
     
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: 'index.html',
+    }),
+
+    new webpack.DefinePlugin({
+      'process.env.REACT_APP_NAME': JSON.stringify(process.env.REACT_APP_NAME || 'Gaming Admin'),
+      'process.env.REACT_APP_STAGE': JSON.stringify(process.env.REACT_APP_STAGE || 'development'),
+      'process.env.REACT_APP_API_DOMAIN': JSON.stringify(process.env.REACT_APP_API_DOMAIN || 'https://admin.laiwan.io/admin/'),
+      'process.env.REACT_APP_VERSION': JSON.stringify(process.env.REACT_APP_VERSION || '1.0.0'),
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
     }),
   ],
   

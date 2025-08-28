@@ -1,18 +1,26 @@
-import React from 'react';
-import { Table, Avatar, Button, Space, Tag, Image } from 'antd';
+import React, { useState } from 'react';
+import { Table, Button, Space, Tag, Image, Modal } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import { UserAvatar } from '@shared/ui';
 
 const AvatarList: React.FC = () => {
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+
+  const handlePreview = (imageUrl: string) => {
+    setPreviewImage(imageUrl);
+    setPreviewVisible(true);
+  };
   const columns = [
     {
       title: '头像预览',
       dataIndex: 'avatar',
       key: 'avatar',
       render: (avatar: string) => (
-        <Avatar 
-          size={64} 
-          src={avatar} 
-          style={{ cursor: 'pointer' }}
+        <UserAvatar 
+          src={avatar}
+          size={64}
+          onClick={() => avatar && handlePreview(avatar)}
         />
       ),
     },
@@ -52,11 +60,7 @@ const AvatarList: React.FC = () => {
           <Button 
             icon={<EyeOutlined />} 
             size="small"
-            onClick={() => {
-              Image.preview({
-                src: record.avatar,
-              });
-            }}
+            onClick={() => handlePreview(record.avatar)}
           >
             查看
           </Button>
@@ -96,6 +100,14 @@ const AvatarList: React.FC = () => {
       uploadTime: '2024-01-13 09:15',
       status: '已拒绝',
     },
+    {
+      key: '4',
+      userId: 'U004', 
+      username: '赵六',
+      avatar: null, // 没有头像，将显示默认头像
+      uploadTime: '2024-01-12 14:30',
+      status: '待审核',
+    },
   ];
 
   return (
@@ -117,6 +129,20 @@ const AvatarList: React.FC = () => {
           showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条/共 ${total} 条`,
         }}
       />
+      
+      <Modal
+        open={previewVisible}
+        footer={null}
+        onCancel={() => setPreviewVisible(false)}
+        width={800}
+        centered
+      >
+        <Image
+          src={previewImage}
+          style={{ width: '100%' }}
+          preview={false}
+        />
+      </Modal>
     </>
   );
 };

@@ -2,10 +2,10 @@ import React from 'react';
 import { Layout, Menu } from 'antd';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
-  DashboardOutlined,
-  GamepadOutlined,
-  UserOutlined,
-  SettingOutlined 
+  BarChartOutlined,
+  AccountBookOutlined,
+  ProfileOutlined,
+  SettingOutlined
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -17,23 +17,18 @@ const Sidebar: React.FC = () => {
   const menuItems = [
     {
       key: '/user-report',
-      icon: <DashboardOutlined />,
+      icon: <BarChartOutlined />,
       label: '用户报告',
     },
     {
       key: '/user-transaction',
-      icon: <GamepadOutlined />,
+      icon: <AccountBookOutlined />,
       label: '用户交易',
     },
     {
       key: '/user-profile',
-      icon: <UserOutlined />,
+      icon: <ProfileOutlined />,
       label: '用户档案',
-    },
-    {
-      key: '/user-avatar',
-      icon: <UserOutlined />,
-      label: '用户头像',
     },
     {
       key: '/app-user',
@@ -47,24 +42,44 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <Sider width={200} style={{ background: '#fff' }}>
+    <Sider 
+      width={200} 
+      style={{ 
+        position: 'fixed',
+        left: 0,
+        height: '100vh',
+        overflow: 'auto',
+      }}
+    >
       <div
         style={{
-          height: '64px',
+          padding: '16px 20px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
-          borderBottom: '1px solid #f0f0f0',
         }}
       >
-        <h3 style={{ margin: 0, color: '#1890ff' }}>Gaming Admin</h3>
+        <div
+          style={{
+            height: 40,
+            width: 40,
+            background: '#1890ff',
+            borderRadius: 6,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginRight: 6,
+          }}
+        >
+          <span style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>G</span>
+        </div>
+        <span style={{ color: '#fff', fontSize: 17 }}>Gaming Admin</span>
       </div>
       <Menu
-        mode=\"inline\"
+        theme="dark"
+        mode="inline"
         selectedKeys={[location.pathname]}
         items={menuItems}
         onClick={handleMenuClick}
-        style={{ height: 'calc(100% - 64px)', borderRight: 0 }}
       />
     </Sider>
   );

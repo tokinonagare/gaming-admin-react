@@ -1,5 +1,6 @@
 import React from 'react';
-import { Layout as AntLayout } from 'antd';
+import { Layout as AntLayout, ConfigProvider } from 'antd';
+import zhCN from 'antd/es/locale/zh_CN';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
@@ -11,15 +12,25 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <AntLayout style={{ minHeight: '100vh' }}>
-      <Sidebar />
-      <AntLayout>
-        <Header />
-        <Content style={{ margin: '16px' }}>
-          {children}
-        </Content>
+    <ConfigProvider locale={zhCN}>
+      <AntLayout style={{ minHeight: '100vh' }}>
+        <Sidebar />
+        <AntLayout style={{ marginLeft: 200 }}>
+          <Header />
+          <Content
+            style={{
+              margin: '20px 16px',
+              padding: 24,
+              minHeight: 280,
+              background: '#fff',
+              borderRadius: 6,
+            }}
+          >
+            {children}
+          </Content>
+        </AntLayout>
       </AntLayout>
-    </AntLayout>
+    </ConfigProvider>
   );
 };
 

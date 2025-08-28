@@ -1,3 +1,7 @@
+// 实体类
+export { default as BaseEntity } from './entities/BaseEntity';
+
+// 用户相关类型
 export interface User {
   id: string;
   username: string;
@@ -8,6 +12,7 @@ export interface User {
   createdAt: string;
 }
 
+// 游戏相关类型
 export interface Game {
   id: string;
   name: string;
@@ -20,6 +25,7 @@ export interface Game {
   updatedAt: string;
 }
 
+// UI相关类型
 export interface MenuItem {
   key: string;
   label: string;
@@ -27,6 +33,7 @@ export interface MenuItem {
   children?: MenuItem[];
 }
 
+// API相关类型
 export interface ApiResponse<T = any> {
   code: number;
   message: string;

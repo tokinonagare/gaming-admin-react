@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Connection Test</title>
+</head>
+<body>
+    <h1>API Connection Test</h1>
+    <div>
+        <label>API Base URL: </label>
+        <input type="text" id="apiUrl" value="https://admin.shafayouxi.org/admin/" style="width: 300px;">
+        <button onclick="testConnection()">Test Connection</button>
+    </div>
+    <div style="margin-top: 20px;">
+        <h3>Test Results:</h3>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        async function testConnection() {
+            const apiUrl = document.getElementById('apiUrl').value;
+            const resultsDiv = document.getElementById('results');
+            
+            resultsDiv.innerHTML = '<p>Testing connection...</p>';
+            
+            const tests = [
+                { name: 'Basic Connection', url: apiUrl },
+                { name: 'Avatar Stats', url: `${apiUrl}/avatar/stats` },
+                { name: 'Avatar List', url: `${apiUrl}/avatar/list` },
+                { name: 'CORS Preflight', method: 'OPTIONS', url: `${apiUrl}/avatar/stats` }
+            ];
+            
+            let results = [];
+            
+            for (const test of tests) {
+                try {
+                    console.log(`Testing ${test.name}: ${test.url}`);
+                    
+                    const response = await fetch(test.url, {
+                        method: test.method || 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    
+                    results.push({
+                        name: test.name,
+                        status: response.status,
+                        statusText: response.statusText,
+                        success: response.ok,
+                        headers: [...response.headers.entries()],
+                        url: test.url
+                    });
+                } catch (error) {
+                    results.push({
+                        name: test.name,
+                        error: error.message,
+                        success: false,
+                        url: test.url
+                    });
+                }
+            }
+            
+            displayResults(results);
+        }
+        
+        function displayResults(results) {
+            const resultsDiv = document.getElementById('results');
+            let html = '';
+            
+            results.forEach(result => {
+                const status = result.success ? '✅' : '❌';
+                html += `
+                    <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                        <h4>${status} ${result.name}</h4>
+                        <p><strong>URL:</strong> ${result.url}</p>
+                        ${result.status ? `<p><strong>Status:</strong> ${result.status} ${result.statusText}</p>` : ''}
+                        ${result.error ? `<p style="color: red;"><strong>Error:</strong> ${result.error}</p>` : ''}
+                        ${result.headers ? `
+                            <details>
+                                <summary>Response Headers</summary>
+                                <pre>${result.headers.map(([key, value]) => `${key}: ${value}`).join('\n')}</pre>
+                            </details>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        // Auto-test on load
+        window.onload = () => {
+            setTimeout(testConnection, 500);
+        };
+    </script>
+</body>
+</html>

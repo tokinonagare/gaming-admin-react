@@ -1,45 +1,51 @@
 import React from 'react';
-import { Layout, Avatar, Dropdown, Space } from 'antd';
+import { Layout, Avatar, Dropdown, Button } from 'antd';
 import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
+import { AuthStorage } from '@shared/utils';
 
 const { Header: AntHeader } = Layout;
 
 const Header: React.FC = () => {
+  const username = AuthStorage.getUsername();
+
+  const handleSignOut = () => {
+    AuthStorage.clear();
+    window.location.reload();
+  };
+
   const items: MenuProps['items'] = [
     {
-      key: '1',
-      label: '个人设置',
-      icon: <UserOutlined />,
-    },
-    {
-      type: 'divider',
-    },
-    {
-      key: '2',
+      key: 'signout',
       label: '退出登录',
       icon: <LogoutOutlined />,
       danger: true,
+      onClick: handleSignOut,
     },
   ];
 
   return (
     <AntHeader
       style={{
-        padding: '0 24px',
+        padding: '0 12px',
         background: '#fff',
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         alignItems: 'center',
-        borderBottom: '1px solid #f0f0f0',
+        height: 50,
       }}
     >
-      <h2 style={{ margin: 0 }}>游戏平台管理系统</h2>
-      <Dropdown menu={{ items }} placement=\"bottomRight\">
-        <Space style={{ cursor: 'pointer' }}>
-          <Avatar icon={<UserOutlined />} />
-          <span>管理员</span>
-        </Space>
+      <Dropdown menu={{ items }} placement="bottomCenter">
+        <Button
+          type="text"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar size="small" icon={<UserOutlined />} />
+          <span style={{ marginLeft: 5 }}>{username || '管理员'}</span>
+        </Button>
       </Dropdown>
     </AntHeader>
   );
