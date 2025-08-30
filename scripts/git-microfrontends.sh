@@ -131,13 +131,16 @@ add_remotes() {
     echo "Base URL: $base_url"
     echo ""
     
-    # Define repository mappings
-    declare -A repo_names=(
-        ["user-report"]="gaming-admin-user-report"
-        ["user-transaction"]="gaming-admin-user-transaction"
-        ["user-profile"]="gaming-admin-user-profile"
-        ["app-user"]="gaming-admin-app-user"
-    )
+    # Define repository mappings (bash 3.2 compatible)
+    get_repo_name() {
+        case "$1" in
+            "user-report") echo "gaming-admin-user-report" ;;
+            "user-transaction") echo "gaming-admin-user-transaction" ;;
+            "user-profile") echo "gaming-admin-user-profile" ;;
+            "app-user") echo "gaming-admin-app-user" ;;
+            *) echo "gaming-admin-$1" ;;
+        esac
+    }
     
     for app in "${APPS[@]}"; do
         print_app_header "$app"
@@ -145,7 +148,7 @@ add_remotes() {
         if [ -d "apps/$app/.git" ]; then
             cd "apps/$app"
             
-            repo_name="${repo_names[$app]}"
+            repo_name=$(get_repo_name "$app")
             remote_url="$base_url/$repo_name.git"
             
             if git remote add origin "$remote_url" 2>/dev/null; then

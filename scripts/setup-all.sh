@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Gaming Admin Micro-frontends Setup Script
-# Usage: ./scripts/setup-all.sh [install|update|clean]
+# Gaming Admin Setup Script  
+# Usage: ./scripts/setup-all.sh [install|update|clean|status]
+# This script manages external micro-frontend repositories for team collaboration
 
 set -e
 
@@ -13,12 +14,12 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Configuration
-WORKSPACE_DIR="../gaming-admin-workspace"
+APPS_DIR="apps"
 MAIN_REPO="gaming-admin-react"
 
 # Micro-frontend repositories (bash 3.2 compatible)
 REPOS_user_report="https://github.com/kevinanew/user_report_admin_react.git"
-REPOS_user_transaction="https://github.com/kevinanew/user_transaction_admin_react.git"
+REPOS_user_transaction="https://github.com/kevinanew/user_transaction_admin_react.git" 
 REPOS_user_profile="https://github.com/kevinanew/user_profile_admin_react.git"
 REPOS_app_user="https://github.com/kevinanew/app_user_admin_react.git"
 
@@ -54,14 +55,14 @@ print_info() {
     echo -e "${BLUE}ℹ️  $message${NC}"
 }
 
-setup_workspace() {
-    print_section "Setting up workspace directory"
+setup_apps_directory() {
+    print_section "Setting up apps directory"
     
-    if [ ! -d "$WORKSPACE_DIR" ]; then
-        mkdir -p "$WORKSPACE_DIR"
-        print_success "Created workspace directory: $WORKSPACE_DIR"
+    if [ ! -d "$APPS_DIR" ]; then
+        mkdir -p "$APPS_DIR"
+        print_success "Created apps directory: $APPS_DIR"
     else
-        print_info "Workspace directory already exists: $WORKSPACE_DIR"
+        print_info "Apps directory already exists: $APPS_DIR"
     fi
 }
 
@@ -74,7 +75,7 @@ get_repo_url() {
 clone_or_update_repo() {
     local name="$1"
     local url=$(get_repo_url "$name")
-    local dir="$WORKSPACE_DIR/$name"
+    local dir="$APPS_DIR/$name"
     
     if [ ! -d "$dir" ]; then
         print_info "Cloning $name..."
@@ -92,7 +93,7 @@ clone_or_update_repo() {
 
 install_dependencies() {
     local name="$1"
-    local dir="$WORKSPACE_DIR/$name"
+    local dir="$APPS_DIR/$name"
     
     print_info "Installing dependencies for $name..."
     cd "$dir"
@@ -109,7 +110,7 @@ install_dependencies() {
 
 clean_dependencies() {
     local name="$1"
-    local dir="$WORKSPACE_DIR/$name"
+    local dir="$APPS_DIR/$name"
     
     print_info "Cleaning dependencies for $name..."
     cd "$dir"
@@ -162,7 +163,7 @@ show_status() {
     echo ""
     echo "📁 Micro-frontends:"
     for name in $REPO_NAMES; do
-        local dir="$WORKSPACE_DIR/$name"
+        local dir="$APPS_DIR/$name"
         if [ -d "$dir" ]; then
             echo "   $name: ✅ Ready ($dir)"
         else
@@ -194,14 +195,14 @@ show_usage() {
 case "${1:-install}" in
     "install")
         print_header "Installing Gaming Admin System"
-        setup_workspace
+        setup_apps_directory
         setup_main_app
         setup_micro_frontends "install"
         show_status
         ;;
     "update")
         print_header "Updating Gaming Admin System"
-        setup_workspace
+        setup_apps_directory
         setup_main_app
         setup_micro_frontends "update"
         show_status
