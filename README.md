@@ -1,22 +1,20 @@
 # Gaming Admin React
 
-游戏平台管理系统 - 基于微前端架构的现代化管理平台
+游戏平台管理系统
 
-## 🏗️ 架构概览
+## 架构概览
 
-采用独立仓库的微前端架构，支持团队独立开发和部署：
+微前端架构，每个应用独立仓库：
 
 ```
-📂 主仓库 (gaming-admin-react)           📂 独立微前端仓库
-├── 🏠 Shell应用 (4200)                 ├── 📊 用户报告 (4201)
-├── 🎨 共享UI库                          ├── 💰 用户交易 (4202)  
-├── 🛠️ 工具库                           ├── 👤 用户档案 (4203)
-└── 🔧 管理脚本                          └── 📱 应用用户 (4204)
+主仓库 (gaming-admin-react)           独立微前端仓库
+├── Shell应用 (4200)                  ├── 用户报告 (4201)
+├── 共享UI库                          ├── 用户交易 (4202)  
+├── 工具库                            ├── 用户档案 (4203)
+└── 管理脚本                          └── 应用用户 (4204)
 ```
 
-## 🚀 快速开始
-
-### 一键启动（推荐）
+## 快速开始
 ```bash
 # 1. 安装整个系统
 ./scripts/setup-all.sh install
@@ -32,34 +30,25 @@ open http://localhost:4200
 - Node.js 18+
 - npm 8+
 
-## 🎯 微前端应用
+## 微前端应用
 
-| 应用 | 端口 | 仓库 | 功能 |
-|------|------|------|------|
-| 🏠 Shell | 4200 | 本仓库 | 主应用、认证、路由 |
-| 📊 用户报告 | 4201 | [user_report_admin_react](https://github.com/kevinanew/user_report_admin_react) | 数据统计和报告展示 |
-| 💰 用户交易 | 4202 | [user_transaction_admin_react](https://github.com/kevinanew/user_transaction_admin_react) | 钱包管理和交易记录 |
-| 👤 用户档案 | 4203 | [user_profile_admin_react](https://github.com/kevinanew/user_profile_admin_react) | 基础信息和资料管理 |
-| 📱 应用用户 | 4204 | [app_user_admin_react](https://github.com/kevinanew/app_user_admin_react) | 用户权限和设置管理 |
+| 应用 | 端口 | 仓库 |
+|------|------|------|
+| Shell | 4200 | 本仓库 |
+| 用户报告 | 4201 | [user_report_admin_react](https://github.com/kevinanew/user_report_admin_react) |
+| 用户交易 | 4202 | [user_transaction_admin_react](https://github.com/kevinanew/user_transaction_admin_react) |
+| 用户档案 | 4203 | [user_profile_admin_react](https://github.com/kevinanew/user_profile_admin_react) |
+| 应用用户 | 4204 | [app_user_admin_react](https://github.com/kevinanew/app_user_admin_react) |
 
-## 🔧 技术栈
+## 技术栈
 
-**前端框架**
 - React 18 + TypeScript
-- Webpack 5 + Module Federation
-- Ant Design + 自定义组件库
+- Webpack 5 + Module Federation  
+- Ant Design
+- React Query + React Context
+- JWT认证
 
-**状态管理**
-- React Query (API状态)
-- React Context (全局状态)
-- JWT认证 + AuthStorage
-
-**开发工具**
-- ESLint + TypeScript
-- Git子模块管理
-- 自动化脚本
-
-## 💻 开发指南
+## 开发指南
 
 ### 系统管理
 ```bash
@@ -101,7 +90,7 @@ REACT_APP_API_DOMAIN=https://admin.laiwan.io/admin/ ./scripts/manage-services.sh
 REACT_APP_API_DOMAIN=https://admin.shafayouxi.org/admin/ ./scripts/manage-services.sh start # Staging环境
 ```
 
-## 🛠️ 项目结构
+## 项目结构
 
 ### 主仓库结构
 ```
@@ -139,28 +128,8 @@ gaming-admin-react/
 └── app-user/                # 应用用户微前端
 ```
 
-## 🌐 核心功能
 
-### 🔒 认证系统
-- 统一登录页面
-- JWT令牌管理
-- 自动状态持久化
-- 401错误处理
-- 路由权限守卫
-
-### 🎨 共享组件库
-- Layout布局组件
-- UserAvatar智能头像（CSS恶魔默认头像）
-- AuthRoute认证路由
-- 统一的UI风格
-
-### 📊 微前端集成
-- Module Federation运行时加载
-- 共享依赖管理
-- 错误边界和降级处理
-- 独立部署支持
-
-## 🚀 部署
+## 部署
 
 ### 开发环境
 ```bash
@@ -193,24 +162,8 @@ REACT_APP_NAME=Gaming Admin
 REACT_APP_VERSION=1.0.0
 ```
 
-## 🏛️ 架构优势
 
-### ✅ 独立开发
-- 每个微前端有独立的Git仓库
-- 团队可以独立管理代码和发布
-- 不同的技术栈和开发节奏
-
-### ✅ 灵活部署  
-- 支持独立部署到不同域名
-- 渐进式发布和回滚
-- CDN友好的静态资源
-
-### ✅ 代码共享
-- 统一的UI组件库
-- 共享的工具函数和类型
-- 一致的认证和API层
-
-## 🛡️ 故障排除
+## 故障排除
 
 ### 常见问题
 
@@ -249,27 +202,3 @@ REACT_APP_API_DOMAIN=https://admin.laiwan.io/admin/ ./scripts/manage-services.sh
 ./scripts/setup-all.sh install
 ```
 
-## 🤝 参与贡献
-
-### 主仓库贡献
-```bash
-git clone https://github.com/tokinonagare/gaming-admin-react.git
-cd gaming-admin-react
-# 开发Shell应用和共享库
-```
-
-### 微前端贡献
-```bash
-# 贡献各个微前端
-git clone https://github.com/kevinanew/user_report_admin_react.git
-cd user_report_admin_react
-# 开发对应的微前端功能
-```
-
-## 📄 许可证
-
-MIT License
-
----
-
-🎮 **Gaming Admin** - 现代化游戏平台管理系统
