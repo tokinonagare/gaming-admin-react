@@ -16,17 +16,15 @@
 
 ## 项目结构
 
+这个主仓库包含Shell应用和共享库，微前端应用在独立仓库中管理：
+
 ```
-gaming-admin-react/
+gaming-admin-react/                    # 🏠 主仓库
 ├── apps/
-│   ├── shell/              # 🏠 主应用（Host）- 端口4200
-│   │   ├── src/pages/      # 📄 登录页面等
-│   │   └── src/fallbacks/  # 🛡️ 微前端降级组件
-│   ├── user-report/        # 📊 用户报告管理 - 端口4201  
-│   ├── user-transaction/   # 💰 用户交易管理 - 端口4202
-│   ├── user-profile/       # 👤 用户档案管理 - 端口4203
-│   ├── app-user/          # 📱 应用用户管理 - 端口4204
-│   └── user-avatar/       # 🖼️ 用户头像管理 - 端口4205 (暂时移除)
+│   └── shell/              # 🏠 Shell主应用（Host）- 端口4200
+│       ├── src/app/        # 主应用逻辑
+│       ├── src/fallbacks/  # 🛡️ 微前端降级组件
+│       └── webpack.config.js
 ├── libs/
 │   └── shared/
 │       ├── ui/            # 🎨 共享UI组件库
@@ -39,8 +37,17 @@ gaming-admin-react/
 │       │   ├── hooks/      # React Hooks(useApiRequest等)
 │       │   └── constants/  # 常量配置(AppConfig等)
 │       └── types/         # 📋 共享类型定义
-└── scripts/               # 🔧 构建脚本
+└── scripts/               # 🔧 构建和管理脚本
 ```
+
+### 独立微前端仓库
+
+每个微前端都有独立的Git仓库，支持独立开发和部署：
+
+- 📊 **user-report** → [`user_report_admin_react`](https://github.com/kevinanew/user_report_admin_react) (端口4201)
+- 💰 **user-transaction** → [`user_transaction_admin_react`](https://github.com/kevinanew/user_transaction_admin_react) (端口4202)  
+- 👤 **user-profile** → [`user_profile_admin_react`](https://github.com/kevinanew/user_profile_admin_react) (端口4203)
+- 📱 **app-user** → [`app_user_admin_react`](https://github.com/kevinanew/app_user_admin_react) (端口4204)
 
 ## 🚀 快速开始
 
@@ -54,19 +61,35 @@ npm install
 ```
 
 ### 开发模式
+
+#### 启动Shell主应用
 ```bash
-# 启动主应用
+# 启动主应用（本仓库）
 npm run serve:shell
+```
 
-# 启动各个微应用
-npm run serve:report        # 用户报告
-npm run serve:transaction   # 用户交易  
-npm run serve:profile       # 用户档案
-npm run serve:app-user      # 应用用户
-# npm run serve:avatar      # 用户头像 (暂时移除)
+#### 启动微前端应用
+每个微前端需要在其独立仓库中启动：
 
-# 同时启动所有应用
-npm run serve:all
+```bash
+# 克隆并启动各个微前端仓库
+git clone https://github.com/kevinanew/user_report_admin_react.git
+cd user_report_admin_react && npm install && npm run dev
+
+git clone https://github.com/kevinanew/user_transaction_admin_react.git  
+cd user_transaction_admin_react && npm install && npm run dev
+
+git clone https://github.com/kevinanew/user_profile_admin_react.git
+cd user_profile_admin_react && npm install && npm run dev
+
+git clone https://github.com/kevinanew/app_user_admin_react.git
+cd app_user_admin_react && npm install && npm run dev
+```
+
+#### 快速开发脚本
+```bash
+# 如果微前端在本地开发目录中，可以使用管理脚本
+./scripts/git-microfrontends.sh status  # 查看所有微前端状态
 ```
 
 ### 生产环境配置
@@ -101,19 +124,16 @@ echo "REACT_APP_API_DOMAIN=https://admin.laiwan.io/admin/" > .env.production
 
 ## 🔧 可用脚本
 
-### 启动服务
+### Shell主应用
 - `npm start` - 启动Shell主应用
 - `npm run serve:shell` - 启动Shell主应用 (端口4200)
-- `npm run serve:report` - 启动用户报告微应用 (端口4201)
-- `npm run serve:transaction` - 启动用户交易微应用 (端口4202)
-- `npm run serve:profile` - 启动用户档案微应用 (端口4203)
-- `npm run serve:app-user` - 启动应用用户微应用 (端口4204)
-- `npm run serve:all` - 同时启动所有应用
-
-### 构建部署
-- `npm run build` - 构建所有应用
-- `npm run build:parallel` - 并行构建所有应用(更快)
+- `npm run build` - 构建Shell应用
 - `npm run clean` - 清理构建产物
+
+### 微前端管理
+- `./scripts/git-microfrontends.sh status` - 查看所有微前端Git状态
+- `./scripts/git-microfrontends.sh commit "message"` - 批量提交微前端更改
+- `./scripts/git-microfrontends.sh push origin master` - 批量推送微前端
 
 ### 代码质量
 - `npm run lint` - 代码检查
@@ -181,29 +201,39 @@ echo "REACT_APP_API_DOMAIN=https://admin.laiwan.io/admin/" > .env.production
 ## 🚀 部署
 
 ### 生产构建
-```bash
-# 生产构建
-npm run build
 
-# 或者并行构建（更快）
-npm run build:parallel
+#### Shell主应用（本仓库）
+```bash
+# 构建Shell应用
+npm run build
 ```
 
-### 部署结构
-构建后的文件位于 `dist/` 目录：
-- `dist/apps/shell/` - 主应用构建产物
-- `dist/apps/user-report/` - 用户报告应用构建产物  
-- `dist/apps/user-transaction/` - 用户交易应用构建产物
-- `dist/apps/user-profile/` - 用户档案应用构建产物
-- `dist/apps/app-user/` - 应用用户应用构建产物
+#### 微前端应用（独立仓库）
+每个微前端需要在其独立仓库中构建：
+```bash
+# 在各自仓库中构建
+cd user_report_admin_react && npm run build
+cd user_transaction_admin_react && npm run build  
+cd user_profile_admin_react && npm run build
+cd app_user_admin_react && npm run build
+```
 
-### 仓库对应关系
-每个应用对应独立仓库，可以独立部署到不同的域名或路径下：
+### 部署架构
 
-- `user_report_admin_react` → `apps/user-report`
-- `user_transaction_admin_react` → `apps/user-transaction`
-- `user_profile_admin_react` → `apps/user-profile`
-- `app_user_admin_react` → `apps/app-user`
+#### 独立部署模式
+每个应用可以独立部署到不同的域名或CDN：
+
+- **Shell主应用**: `https://admin.example.com/` (主域名)
+- **用户报告**: `https://reports.example.com/` (独立域名)
+- **用户交易**: `https://transactions.example.com/` (独立域名)
+- **用户档案**: `https://profiles.example.com/` (独立域名)
+- **应用用户**: `https://users.example.com/` (独立域名)
+
+#### 仓库对应关系
+- 📊 [`user_report_admin_react`](https://github.com/kevinanew/user_report_admin_react) → 用户报告服务
+- 💰 [`user_transaction_admin_react`](https://github.com/kevinanew/user_transaction_admin_react) → 用户交易服务
+- 👤 [`user_profile_admin_react`](https://github.com/kevinanew/user_profile_admin_react) → 用户档案服务
+- 📱 [`app_user_admin_react`](https://github.com/kevinanew/app_user_admin_react) → 应用用户服务
 
 ### 环境变量配置
 创建 `.env.production` 文件：
@@ -242,13 +272,44 @@ REACT_APP_VERSION=1.0.0
    - 确认使用 `UserAvatar` 组件而不是 `Avatar`
    - 检查 `src` 属性为空或null时的降级逻辑
 
+## 📁 微前端仓库管理
+
+### Git仓库架构
+本项目采用独立仓库模式管理微前端：
+
+- **主仓库**: [`gaming-admin-react`](https://github.com/tokinonagare/gaming-admin-react) - Shell + 共享库
+- **微前端仓库**: 各自独立的Git仓库，支持独立开发和部署
+
+### 管理脚本
+使用便捷脚本管理所有微前端仓库：
+```bash
+# 查看所有微前端状态
+./scripts/git-microfrontends.sh status
+
+# 批量提交更改
+./scripts/git-microfrontends.sh commit "feat: add new feature"
+
+# 批量推送到远程
+./scripts/git-microfrontends.sh push origin master
+```
+
+### 优势
+- ✅ **独立开发**: 团队可以独立管理各自的微前端
+- ✅ **独立部署**: 支持不同的发布节奏和版本控制  
+- ✅ **权限管理**: 可以为不同微前端设置不同的访问权限
+- ✅ **减少冲突**: 避免多团队在同一仓库中的合并冲突
+
 ## 🤝 贡献
 
-1. Fork 项目
+### 主仓库贡献
+1. Fork [`gaming-admin-react`](https://github.com/tokinonagare/gaming-admin-react) 项目
 2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
 3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
 5. 创建 Pull Request
+
+### 微前端仓库贡献
+对应各自的独立仓库进行贡献，流程相同
 
 ## 📄 许可证
 
