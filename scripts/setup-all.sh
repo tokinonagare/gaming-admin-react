@@ -16,13 +16,14 @@ NC='\033[0m' # No Color
 WORKSPACE_DIR="../gaming-admin-workspace"
 MAIN_REPO="gaming-admin-react"
 
-# Micro-frontend repositories
-declare -A REPOS=(
-    ["user-report"]="https://github.com/kevinanew/user_report_admin_react.git"
-    ["user-transaction"]="https://github.com/kevinanew/user_transaction_admin_react.git"
-    ["user-profile"]="https://github.com/kevinanew/user_profile_admin_react.git"
-    ["app-user"]="https://github.com/kevinanew/app_user_admin_react.git"
-)
+# Micro-frontend repositories (bash 3.2 compatible)
+REPOS_user_report="https://github.com/kevinanew/user_report_admin_react.git"
+REPOS_user_transaction="https://github.com/kevinanew/user_transaction_admin_react.git"
+REPOS_user_profile="https://github.com/kevinanew/user_profile_admin_react.git"
+REPOS_app_user="https://github.com/kevinanew/app_user_admin_react.git"
+
+# Repository names
+REPO_NAMES="user-report user-transaction user-profile app-user"
 
 print_header() {
     local message="$1"
@@ -64,9 +65,15 @@ setup_workspace() {
     fi
 }
 
+get_repo_url() {
+    local name="$1"
+    local repo_var="REPOS_$(echo "$name" | tr '-' '_')"
+    eval echo "\$$repo_var"
+}
+
 clone_or_update_repo() {
     local name="$1"
-    local url="$2"
+    local url=$(get_repo_url "$name")
     local dir="$WORKSPACE_DIR/$name"
     
     if [ ! -d "$dir" ]; then
@@ -131,12 +138,11 @@ setup_main_app() {
 setup_micro_frontends() {
     print_section "Setting up micro-frontends"
     
-    for name in "${!REPOS[@]}"; do
-        local url="${REPOS[$name]}"
+    for name in $REPO_NAMES; do
         echo ""
         print_info "Processing $name..."
         
-        clone_or_update_repo "$name" "$url"
+        clone_or_update_repo "$name"
         
         if [ "$1" != "clean" ]; then
             install_dependencies "$name"
@@ -155,7 +161,7 @@ show_status() {
     
     echo ""
     echo "📁 Micro-frontends:"
-    for name in "${!REPOS[@]}"; do
+    for name in $REPO_NAMES; do
         local dir="$WORKSPACE_DIR/$name"
         if [ -d "$dir" ]; then
             echo "   $name: ✅ Ready ($dir)"

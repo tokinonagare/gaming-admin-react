@@ -13,17 +13,18 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Configuration
-WORKSPACE_DIR="../gaming-admin-workspace"
+APPS_DIR="apps"
 API_DOMAIN="${REACT_APP_API_DOMAIN:-https://admin.laiwan.io/admin/}"
 
-# Service configuration
-declare -A SERVICES=(
-    ["shell"]="4200"
-    ["user-report"]="4201"
-    ["user-transaction"]="4202"
-    ["user-profile"]="4203"
-    ["app-user"]="4204"
-)
+# Service configuration (compatible with bash 3.2)
+SERVICES_shell="4200"
+SERVICES_user_report="4201"
+SERVICES_user_transaction="4202"
+SERVICES_user_profile="4203"
+SERVICES_app_user="4204"
+
+# Service list
+SERVICE_NAMES="shell user-report user-transaction user-profile app-user"
 
 # Process tracking file
 PIDS_FILE="/tmp/gaming-admin-pids.txt"
@@ -104,15 +105,21 @@ start_shell() {
     fi
 }
 
+get_service_port() {
+    local service="$1"
+    local service_var="SERVICES_$(echo "$service" | tr '-' '_')"
+    eval echo "\$$service_var"
+}
+
 start_microfrontend() {
     local name="$1"
-    local port="$2"
-    local dir="$WORKSPACE_DIR/$name"
+    local port=$(get_service_port "$name")
+    local dir="$APPS_DIR/$name"
     
     print_info "Starting $name application (port $port)..."
     
     if [ ! -d "$dir" ]; then
-        print_error "$name not found at $dir. Run setup-all.sh first."
+        print_error "$name not found at $dir."
         return 1
     fi
     
@@ -146,9 +153,9 @@ start_all() {
     start_shell
     
     # Start micro-frontends
-    for service in "${!SERVICES[@]}"; do
+    for service in $SERVICE_NAMES; do
         if [ "$service" != "shell" ]; then
-            start_microfrontend "$service" "${SERVICES[$service]}"
+            start_microfrontend "$service"
         fi
     done
     
@@ -166,8 +173,8 @@ stop_all() {
     
     if [ ! -f "$PIDS_FILE" ]; then
         print_info "No PID file found, stopping by port..."
-        for service in "${!SERVICES[@]}"; do
-            local port="${SERVICES[$service]}"
+        for service in $SERVICE_NAMES; do
+            local port=$(get_service_port "$service")
             if kill_port "$port"; then
                 print_success "Stopped service on port $port"
             fi
@@ -185,8 +192,8 @@ stop_all() {
     
     # Clean up any remaining processes on our ports
     print_info "Cleaning up ports..."
-    for service in "${!SERVICES[@]}"; do
-        local port="${SERVICES[$service]}"
+    for service in $SERVICE_NAMES; do
+        local port=$(get_service_port "$service")
         kill_port "$port" >/dev/null 2>&1 || true
     done
     
@@ -206,8 +213,8 @@ show_status() {
     printf "%-20s %-8s %-10s %-s\n" "Service" "Port" "Status" "URL"
     echo "--------------------------------------------------------"
     
-    for service in shell user-report user-transaction user-profile app-user; do
-        local port="${SERVICES[$service]}"
+    for service in $SERVICE_NAMES; do
+        local port=$(get_service_port "$service")
         local url="http://localhost:$port"
         
         if check_port "$port"; then
