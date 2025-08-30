@@ -1,59 +1,38 @@
-const { ModuleFederationPlugin } = require('@module-federation/enhanced/webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const webpack = require('webpack');
-const path = require('path');
+const { ModuleFederationPlugin } = require('@module-federation/enhanced/webpack');
 
-const isDevelopment = process.env.NODE_ENV !== 'production';
+const API_DOMAIN = process.env.REACT_APP_API_DOMAIN || 'http://localhost:3001/admin/';
 
 module.exports = {
-  mode: isDevelopment ? 'development' : 'production',
+  mode: 'development',
   entry: './src/main.tsx',
-  
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-      '@shared/ui': path.resolve(__dirname, '../../libs/shared/ui/src/index.ts'),
-      '@shared/utils': path.resolve(__dirname, '../../libs/shared/utils/src/index.ts'),
-      '@shared/types': path.resolve(__dirname, '../../libs/shared/types/src/index.ts'),
-    },
+  devServer: {
+    port: 4204,
+    hot: true,
+    open: false,
   },
-  
+  resolve: {
+    extensions: ['.tsx', '.ts', '.jsx', '.js'],
+  },
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        use: [
-          {
-            loader: 'ts-loader',
-            options: {
-              configFile: path.resolve(__dirname, '../../tsconfig.json'),
-              transpileOnly: true,
-            },
-          },
-        ],
+        test: /\.(ts|tsx)$/,
+        use: 'ts-loader',
         exclude: /node_modules/,
       },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
-      {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: 'asset/resource',
-      },
     ],
   },
-  
   plugins: [
     new ModuleFederationPlugin({
       name: 'app_user',
       filename: 'remoteEntry.js',
       exposes: {
-        './AppUser': './src/pages/AppUser',
-        './UserList': './src/components/UserList',
-        './UserDetail': './src/components/UserDetail',
-        './UserManagement': './src/components/UserManagement',
+        './AppUser': './src/app/AppUser',
       },
       shared: {
         react: {
@@ -64,49 +43,21 @@ module.exports = {
           singleton: true,
           requiredVersion: '^18.2.0',
         },
-        'react-router-dom': {
-          singleton: true,
-          requiredVersion: '^6.10.0',
-        },
         antd: {
           singleton: true,
           requiredVersion: '^5.4.0',
         },
+        '@ant-design/icons': {
+          singleton: true,
+          requiredVersion: '^5.0.1',
+        },
       },
     }),
-    
     new HtmlWebpackPlugin({
       template: './src/index.html',
-      filename: 'index.html',
-    }),
-
-    new webpack.DefinePlugin({
-      'process.env.REACT_APP_NAME': JSON.stringify(process.env.REACT_APP_NAME || 'Gaming Admin'),
-      'process.env.REACT_APP_STAGE': JSON.stringify(process.env.REACT_APP_STAGE || 'development'),
-      'process.env.REACT_APP_API_DOMAIN': JSON.stringify(process.env.REACT_APP_API_DOMAIN || 'https://admin.laiwan.io/admin/'),
-      'process.env.REACT_APP_VERSION': JSON.stringify(process.env.REACT_APP_VERSION || '1.0.0'),
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      define: {
+        REACT_APP_API_DOMAIN: JSON.stringify(API_DOMAIN),
+      },
     }),
   ],
-  
-  devServer: {
-    port: 4204,
-    historyApiFallback: true,
-    hot: true,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-  },
-  
-  optimization: {
-    splitChunks: false,
-  },
-  
-  output: {
-    path: path.resolve(__dirname, '../../dist/apps/app-user'),
-    filename: isDevelopment ? '[name].js' : '[name].[contenthash].js',
-    chunkFilename: isDevelopment ? '[name].chunk.js' : '[name].[contenthash].chunk.js',
-    clean: true,
-    publicPath: isDevelopment ? 'http://localhost:4204/' : '/app-user/',
-  },
 };
