@@ -162,20 +162,18 @@ echo "REACT_APP_API_DOMAIN=https://admin.laiwan.io/admin/" > .env.production
 - `./scripts/manage-services.sh status` - 查看服务运行状态
 - `./scripts/manage-services.sh logs` - 查看服务日志
 
-### Shell主应用
+### Shell主应用（单独管理）
 - `npm start` - 启动Shell主应用
 - `npm run serve:shell` - 启动Shell主应用 (端口4200)
 - `npm run build` - 构建Shell应用
 - `npm run clean` - 清理构建产物
+- `npm run lint` - 代码检查
+- `npm run typecheck` - TypeScript类型检查
 
 ### 微前端Git管理
 - `./scripts/git-microfrontends.sh status` - 查看所有微前端Git状态
 - `./scripts/git-microfrontends.sh commit "message"` - 批量提交微前端更改
 - `./scripts/git-microfrontends.sh push origin master` - 批量推送微前端
-
-### 代码质量
-- `npm run lint` - 代码检查
-- `npm run typecheck` - TypeScript类型检查
 
 ## 🏗️ 微前端特性
 
