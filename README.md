@@ -55,12 +55,44 @@ gaming-admin-react/                    # 🏠 主仓库
 - Node.js 18+
 - npm 8+
 
-### 安装依赖
+### 一键安装（推荐）
+使用自动化脚本安装整个系统：
+
+```bash
+# 安装所有应用和依赖
+./scripts/setup-all.sh install
+
+# 启动所有服务
+./scripts/manage-services.sh start
+
+# 打开浏览器访问
+open http://localhost:4200
+```
+
+### 一键服务管理
+```bash
+# 启动所有服务（Shell + 微前端）
+./scripts/manage-services.sh start
+
+# 停止所有服务
+./scripts/manage-services.sh stop
+
+# 重启所有服务
+./scripts/manage-services.sh restart
+
+# 查看服务状态
+./scripts/manage-services.sh status
+
+# 查看日志文件
+./scripts/manage-services.sh logs
+```
+
+### 手动安装（高级用户）
+
+#### 安装依赖
 ```bash
 npm install
 ```
-
-### 开发模式
 
 #### 启动Shell主应用
 ```bash
@@ -84,12 +116,6 @@ cd user_profile_admin_react && npm install && npm run dev
 
 git clone https://github.com/kevinanew/app_user_admin_react.git
 cd app_user_admin_react && npm install && npm run dev
-```
-
-#### 快速开发脚本
-```bash
-# 如果微前端在本地开发目录中，可以使用管理脚本
-./scripts/git-microfrontends.sh status  # 查看所有微前端状态
 ```
 
 ### 生产环境配置
@@ -124,13 +150,25 @@ echo "REACT_APP_API_DOMAIN=https://admin.laiwan.io/admin/" > .env.production
 
 ## 🔧 可用脚本
 
+### 🚀 系统管理脚本（推荐）
+- `./scripts/setup-all.sh install` - 一键安装所有应用和依赖
+- `./scripts/setup-all.sh update` - 一键更新所有应用和依赖
+- `./scripts/setup-all.sh clean` - 清理所有 node_modules
+- `./scripts/setup-all.sh status` - 查看系统安装状态
+
+- `./scripts/manage-services.sh start` - 启动所有服务
+- `./scripts/manage-services.sh stop` - 停止所有服务
+- `./scripts/manage-services.sh restart` - 重启所有服务
+- `./scripts/manage-services.sh status` - 查看服务运行状态
+- `./scripts/manage-services.sh logs` - 查看服务日志
+
 ### Shell主应用
 - `npm start` - 启动Shell主应用
 - `npm run serve:shell` - 启动Shell主应用 (端口4200)
 - `npm run build` - 构建Shell应用
 - `npm run clean` - 清理构建产物
 
-### 微前端管理
+### 微前端Git管理
 - `./scripts/git-microfrontends.sh status` - 查看所有微前端Git状态
 - `./scripts/git-microfrontends.sh commit "message"` - 批量提交微前端更改
 - `./scripts/git-microfrontends.sh push origin master` - 批量推送微前端
